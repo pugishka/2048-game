@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS Joueurs;
+
+CREATE TABLE Joueurs (
+    id INTEGER PRIMARY KEY,
+    username TEXT,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    score INTEGER DEFAULT 0,
+    administrateur BOOLEAN,
+    connected BOOLEAN DEFAULT FALSE
+); 

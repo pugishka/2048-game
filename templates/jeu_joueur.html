@@ -1,0 +1,190 @@
+{% extends '2048_html.html' %}
+
+
+{% block head %}
+
+    <script type="text/babel">
+        ReactDOM.render(
+            <Jeu tailleGrille="4" id="{{id}}"/>,
+            document.getElementById("jeu")
+        )
+    </script>
+
+{% endblock %}
+
+
+{% block content %}
+
+    <script type="text/javascript">
+
+        // source : 
+        // https://iq.opengenus.org/single-page-application-with-flask-ajax/ 
+
+        window.addEventListener("load", (event) => {
+            document.getElementsByClassName("admin")[0].id = "admin{{admin}}";
+            getScore();
+            getInfoJoueurs();
+            setInterval(()=> {getScore(), getInfoJoueurs()}, 2000);
+        });
+
+        var sortLive = 0;
+
+        function getScore(){
+            const request = new XMLHttpRequest();
+            result = request.open('POST', 'getScore');
+            request.onload = () => {
+                const response = JSON.parse(request.responseText);
+                document.getElementById('bestScore').innerHTML = response["score"];
+            }; 
+            request.send();
+        }
+
+        function updateScore(score,id){
+            var info = '{"id":"'+ id +'" , "score":"' + score + '"}'
+            const request = new XMLHttpRequest();
+            result = request.open('POST', 'updateScore/' + info);
+            request.send();
+        }
+
+        function getInfoJoueurs(){
+            const request = new XMLHttpRequest();
+            result = request.open('POST', 'getInfoJoueurs');
+            request.onload = () => {
+                const response = JSON.parse(request.responseText);
+                r = "";
+                j = 0;
+                nC = 0;
+                nI = 0;
+                while (j<response.length) {
+                    i = response[j];
+                    nI++;
+                    c = "false";
+                    a = "false";
+                    if ( i["connected"] == 1 ) {
+                        c = "true";
+                        nC++;
+                    }
+                    if ( i["administrateur"] == 1 ) {
+                        a = "true";
+                    }
+
+                    r += "<tr>";
+                    r += "<td>" + i['id'] + "</td>";
+                    r += "<td>" + i['username'] + "</td>";
+                    r += "<td>" + i['score'] + "</td>";
+                    r += "<td id='caseVert" + a +"'></td>";
+                    r += "<td>" + i['created'] + "</td>";
+                    r += "<td id='caseVert" + c +"'></td>";
+                    r += "</tr>";
+                    j++;
+                }
+                document.getElementById('tableJoueurs').innerHTML = r;
+                document.getElementById('numberConnected').innerHTML = nC;
+                document.getElementById('numberInscrit').innerHTML = nI;
+                sortTable(sortLive);
+            }; 
+
+            request.send();
+        }
+
+
+        // source :
+        // https://www.educba.com/bootstrap-sort-table/
+
+        function sortTable(n) {
+            var tables, sort, i, x, y, tableSort;
+
+            sortLive = n;
+
+            tables = document.getElementById("tableJoueurs");
+            sort = true;
+            while (sort) {
+                sort = false;
+                tblrow = tables.rows;
+                for (i = 0; i < (tblrow.length - 1); i++) {
+                    tableSort = false;
+                    x = tblrow[i].getElementsByTagName("td")[n-1];
+                    y = tblrow[i + 1].getElementsByTagName("td")[n-1];
+                    a = x.innerHTML;
+                    b = y.innerHTML;
+                    if ( n == 0 || n == 3 ){
+                        a = parseInt(a);
+                        b = parseInt(b);
+                    } else {
+                        a = new Date(a);
+                        b = new Date(b);
+                    }
+                    if ( a > b ) {
+                        tableSort = true;
+                        break;
+                    }
+                }
+                if (tableSort) {
+                    tblrow[i].parentNode.insertBefore(tblrow[i + 1], tblrow[i]);
+                    sort = true;
+                }
+            }
+        }
+
+        function deconnexion(){
+            var info = '{"id":"{{id}}"}';
+            const request = new XMLHttpRequest();
+            result = request.open('POST', 'deconnexion/' + info);
+            request.send();
+            window.location.pathname = "/~charonon/cgi-bin/app.cgi";
+
+        }
+
+    </script>
+
+    <div>
+
+        <!--Jeu 2048-->
+        <div id="jeu"></div>
+        
+        <!--Scores et infos-->
+        <div id="interface" class="border border-secondary p-5 m-3">
+
+            <!--Deconnecter-->
+            <div><button class="btn btn-danger" onclick="deconnexion()">Déconnexion</button></a></div>
+
+            <!--Meilleur score-->
+            <div id="scores">
+                <h1>Meilleur score : <span id="bestScore" class="alert alert-success"></span></h1>
+                
+            </div>
+
+            <!--Interface de l'admin-->
+            <div class="admin" id="admin0">
+
+                <h1>Tableau des scores :</h1>
+
+	        <p><i>Cliquez sur "Id", "Score" ou "Créé le" pour trier.</i></p>
+
+                <!--Nombre d'inscrits et connectes en live-->
+                <p><b>Nombre de joueurs connectés : </b><span id="numberConnected"></span></p>
+                <p><b>Nombre de joueurs inscrits : </b><span id="numberInscrit"></span></p></br>
+
+                <!--Table des informations des joueurs-->
+                <table class="table table-bordered text-center" id="sortTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="align-middle" onclick="sortTable(1)">Id</th>
+                            <th class="align-middle">Surnom</th>
+                            <th class="align-middle" onclick="sortTable(3)">Score</th>
+                            <th class="align-middle">Admin</th>
+                            <th class="align-middle" onclick="sortTable(5)">Créé le</th>
+                            <th class="align-middle">Connecté ?</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableJoueurs">
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    
+{% endblock %}

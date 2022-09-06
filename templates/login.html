@@ -1,0 +1,24 @@
+{% extends '2048_html.html' %}
+
+{% block content %}
+
+<div id="infos" class="m-5">
+
+    <h1>Jeu du 2048</h1>
+
+    <div id="login">
+        <h2>Identification</h2>
+        <form method="post" action="../app.cgi/login" class="border border-secondary p-4 mt-5">
+            <label for="username">Surnom :</label><br>
+            <input type="text" id="username" name="username" value="{{ request.form['username'] }}"><br>
+
+            {% for message in get_flashed_messages() %}
+                <p id="error" class="alert alert-danger p-2 mt-3">{{ message }}</p><br>
+            {% endfor %}
+
+            <input type="submit" id="submit" class="btn btn-secondary p-2 mt-3" value="S'identifier">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

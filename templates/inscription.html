@@ -1,0 +1,37 @@
+{% extends '2048_html.html' %}
+
+
+{% block content %}
+
+<div id="infos" class="m-5">
+
+    <h1>Jeu du 2048</h1>
+
+    <div id="inscription">
+        <h2>Inscription</h2>
+        <form method="post" class="border border-secondary p-4 mt-5">
+            <label for="usernameNew">Surnom :</label><br>
+            <input type="text" id="usernameNew" name="usernameNew"
+                value="{{ request.form['usernameNew'] }}">
+
+                {% for message in get_flashed_messages() %}
+                    <p id="error" class="alert alert-danger p-2 mt-3">{{ message }}</p>
+                {% endfor %}
+                
+                <br><br>
+
+            <label>Êtes-vous un administrateur ?</label><br>
+
+            <input type="radio" id="adminYes" name="admin" value="TRUE">
+            <label for="adminYes">Oui</label>
+
+            <input type="radio" id="adminNo" name="admin" value="FALSE" checked>
+            <label for="adminNo">Non</label><br>
+
+            <input id="submit" class="btn btn-secondary p-2 mt-3" type="submit" value="S'inscrire">
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

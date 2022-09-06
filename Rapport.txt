@@ -1,0 +1,20 @@
+Nadia Charonov
+20121063
+
+Lien fonctionnel :
+https://www-ens.iro.umontreal.ca/~charonon/cgi-bin/app.cgi
+
+Lien du dossier :
+https://www-ens.iro.umontreal.ca/~charonon/IFT3225_TP3/
+
+J'ai trouvé que ce devoir était bien plus compliqué que ceux d'avant.
+Ça m'a pris plus de temps et je n'ai pas pu corriger les erreurs potentielles du TP2. Néanmoins
+la partie Flask fonctionne pour moi, même si la partie "jeu" du TP2 n'est pas parfaite.
+
+Le premier lien est celui pour faire fonctionner le jeu. J'ai mis dans le dossier cgi-bin l'environnement,
+le fichier app.cgi et le fichier app.py.
+La partie "static" et les "templates" sont dans le dossier IFT3225_TP3.
+
+J'ai fait differentes pages, une pour l'accueil, s'inscrire, se connecter, et le jeu.
+Pour la base de donnée, je l'ai construite avec le schéma "schema.sql" du dossier sql. J'ai
+utilisé les lignes de commandes, et je l'ai peuplé pour faire des tests.
